@@ -21,7 +21,7 @@ export async function getProducts(req, res) {
 }
 
 //CREATE - POST /api/products
-// Requests JSON body 
+// Requests JSON body
 // Error and success handling messages
 
 export async function createProduct(req, res) {
@@ -61,5 +61,32 @@ export async function createProduct(req, res) {
   } catch (err) {
     //5. if anything unexpected happens (e.g. DB down), return 500 (server error)
     return res.status(500).json({ error: err.message });
+  }
+}
+
+// READ ONE - GET /api/products/:id
+//Returns a single product by its Mongo_id
+// Handles errors and success
+
+export async function getProductById(req, res) {
+  try {
+    //1. Extract the id from the URL path, e.g. /api/products/5647bf789
+    const { id } = req.params;
+
+    //2. Ask Mongo for a document with this_id.
+    // If "id" isn't a valid ObjectId format, mongoose will throw error (400)
+    const item = await Product.findById(id);
+
+    //3. if the item is null, the id was well-formed but not found in the collection (404)
+    if (!item) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    //4. Found it - return it
+    return res.json(item);
+  } catch (err) {
+    //5. if the id string is invalid (bad length, etc.), mongoose throws a cast error
+    //answer with 400 so clients know the id itself is malformed
+    return res.status(400).json({ error: " Invalid product ID" });
   }
 }

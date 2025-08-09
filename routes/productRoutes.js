@@ -4,8 +4,11 @@
 // Map HTTP endpoints to controller functions.
 
 import { Router } from "express";
-import { getProducts } from "../controllers/productController.js";
-import { createProduct } from "../controllers/productController.js";
+import {
+  getProducts,
+  createProduct,
+  getProductById,
+} from "../controllers/productController.js";
 
 const router = Router();
 
@@ -14,5 +17,8 @@ router.get("/", getProducts); //GET /api/products
 
 // CREATE - send a post request to /api/products with JSON body
 router.post("/", createProduct); //POST /api/product
+
+// GET BY  ID
+router.get("/:id", getProductById); //GET /api/product/:id
 
 export default router;
