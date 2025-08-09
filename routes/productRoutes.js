@@ -9,6 +9,7 @@ import {
   createProduct,
   getProductById,
   updateProduct,
+  deleteProduct,
 } from "../controllers/productController.js";
 
 const router = Router();
@@ -24,5 +25,8 @@ router.get("/:id", getProductById); //GET /api/product/:id
 
 // UPDATE By Id
 router.put("/:id", updateProduct); // UPDATE /api/product/:id
+
+// DELETE by id
+router.delete("/:id", deleteProduct); // DELETE /api/product/:id
 
 export default router;

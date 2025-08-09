@@ -156,3 +156,25 @@ export async function updateProduct(req, res) {
     return res.status(400).json({ error: "invalid product ID" });
   }
 }
+
+//DELETE - DELETE /api/products/:id
+//Remove one product by its _id and confirm deletion
+export async function deleteProduct(req, res) {
+  try {
+    //1. read id from URL
+    const { id } = req.params;
+    //2. ask mongo to delete teh doc with the _id
+    const deleted = await Product.findByIdAndDelete(id);
+
+    //3. if nothing was deleted, either it never existed or was already removed
+    if (!deleted) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    //4. success: return a tiny confirmation payload
+    return res.json({ message: "Product deleted", id: deleted._id });
+  } catch (err) {
+    //5. invalid objectId mongoose throws a respond 400
+    return res.status(400).json({ error: "Invalid product ID" });
+  }
+}
