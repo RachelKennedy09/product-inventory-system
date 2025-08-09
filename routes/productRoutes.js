@@ -8,6 +8,7 @@ import {
   getProducts,
   createProduct,
   getProductById,
+  updateProduct,
 } from "../controllers/productController.js";
 
 const router = Router();
@@ -20,5 +21,8 @@ router.post("/", createProduct); //POST /api/product
 
 // GET BY  ID
 router.get("/:id", getProductById); //GET /api/product/:id
+
+// UPDATE By Id
+router.put("/:id", updateProduct); // UPDATE /api/product/:id
 
 export default router;

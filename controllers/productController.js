@@ -90,3 +90,69 @@ export async function getProductById(req, res) {
     return res.status(400).json({ error: " Invalid product ID" });
   }
 }
+
+// UPDATE - PUT /api/products/:id
+//Update price, quantity, and/or category of oen product, then return the updated doc
+//Handles errors and success
+
+export async function updateProduct(req, res) {
+  try {
+    //1. pull id from URL and fields from body
+    const { id } = req.params;
+    const { price, quantity, category } = req.body;
+
+    //2. Build an updates object only with fields the client actually sent
+    const updates = {};
+
+    //price: allow 0 (so check against null/undefined, not falsy)
+    if (price != null) {
+      if (typeof price !== "number") {
+        return res.status(400).json({ error: "price must be a number" });
+      }
+      if (price < 0) {
+        return res.status(400).json({ error: "price cannot be negative" });
+      }
+      updates.price = price;
+    }
+
+    if (quantity != null) {
+      if (typeof quantity !== "number") {
+        return res.status(400).json({ error: "quantity must be a number" });
+      }
+      if (quantity < 0) {
+        return res.status(400).json({ error: "quantity cannot be negative" });
+      }
+      updates.quantity = quantity;
+    }
+
+    if (category != null) {
+      if (typeof category !== "string") {
+        return res.status(400).json({ error: "category must be a string" });
+      }
+      // store lowercase to keep filtering predictable
+      updates.category = category.toLowerCase();
+    }
+
+    // 3. if the client sent nothing to update, let them know
+    if (Object.keys(updates).length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Provide at least one of: price, quantity, category" });
+    }
+
+    //4. find the doc by id and apply updates
+    // { new: true } makes mongoose return the updated doc instead of the old one
+    const updated = await Product.findByIdAndUpdate(id, updates, { new: true });
+
+    //5. if no dov matched that id then 404 ( id shape ok but not found)
+    if (!updated) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    //6. finally success , send the updated product
+    return res.json(updated);
+  } catch (err) {
+    //7. if id shape is invalid (not a proper ObjectId), mongoose throws a 404
+    return res.status(400).json({ error: "invalid product ID" });
+  }
+}
