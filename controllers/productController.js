@@ -3,7 +3,7 @@
 
 //Imports
 
-import { Product } from "./models/Product.js";
+import { Product } from "../models/Product.js";
 
 //READ ALL - GET /api/products
 export async function getProducts(req, res) {
