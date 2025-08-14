@@ -5,7 +5,7 @@
 import "dotenv/config"; //Loads .env so process.env has MONGODB_URI, PORT
 import express from "express"; //Web framework
 import morgan from "morgan"; //Request logger to see incoming calls
-import { connectDB } from "./db.js"; // DB connection function
+import { dbState } from "./db.js"; // DB connection function
 import productRoutes from "./routes/productRoutes.js"; // import routes
 
 // call the app
@@ -17,7 +17,11 @@ app.use(morgan("dev")); // Log method, path, status in terminal
 
 //A health route to verify the server is alive
 app.get("/health", (req, res) => {
-  res.json({ ok: true, uptime: process.uptime() });
+  res.status(200).json({
+    ok: true,
+    uptime: process.uptime(),
+    db: dbState(), // "connected" | "connecting" | "disconnected" | "disconnecting"
+  });
 });
 
 // Route so /api/products will work

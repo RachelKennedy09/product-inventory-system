@@ -1,20 +1,44 @@
-// File exposes a single function that connects to MongoDB using Mongoose
-// This keeps server.js strictly for HTTP concerns (New practice)
-// Notes for user: Import connectDB in server.js and call it before app.listen
-
-//Import mongoose
+// db.js
 import mongoose from "mongoose";
 
+const readyMap = {
+  0: "disconnected",
+  1: "connected",
+  2: "connecting",
+  3: "disconnecting",
+};
+
+export function dbState() {
+  return readyMap[mongoose.connection.readyState] || "unknown";
+}
+
 export async function connectDB(uri) {
-  //Makes query behavior a bit stricter
+  if (!uri) {
+    console.error("MONGODB_URI missing. Check your .env");
+    process.exit(1);
+  }
+
   mongoose.set("strictQuery", true);
 
   try {
+    console.log("Connecting to MongoDB...");
     await mongoose.connect(uri);
     console.log("MongoDB connected");
   } catch (err) {
     console.error("MongoDB connection error:", err.message);
-    //If DB fails, exit so you fix it instead of running half-broken server
     process.exit(1);
   }
+
+  // connection event logs
+  mongoose.connection.on("disconnected", () =>
+    console.warn(" MongoDB disconnected")
+  );
+  mongoose.connection.on("reconnected", () =>
+    console.log(" MongoDB reconnected")
+  );
+}
+
+/**  export for tests */
+export async function disconnectDB() {
+  await mongoose.disconnect();
 }
