@@ -4,6 +4,85 @@
 //Imports
 
 import { Product } from "../models/Product.js";
+import { quickSort } from "../utils/quicksort.js";
+import { binarySearch } from "../utils/binarySearch.js";
+
+//SORT PRODUCTS -  GET /api/products/sort/:key?order=asc|desc
+export async function sortProducts(req, res) {
+  try {
+    const { key } = req.params;
+    const order = (req.query.order || "asc").toLowerCase();
+
+    // Validate inputs early to give clear error messages
+    const validKeys = ["name", "category", "price", "quantity"];
+    if (!validKeys.includes(key)) {
+      return res.status(400).json({
+        error: `Invalid sort key. Use one of: ${validKeys.join(", ")}`,
+      });
+    }
+
+    if (!["asc", "desc"].includes(order)) {
+      return res.status(400).json({
+        error: "Invalid order. Use 'asc' or 'desc'.",
+      });
+    }
+
+    // Pull all products. .lean() returns plain objects.
+    const items = await Product.find({}).lean();
+
+    // Run our QuickSort (non-mutating) and return the result
+    const sorted = quickSort(items, key, order);
+    return res.status(200).json(sorted);
+  } catch (err) {
+    // General server error (e.g., DB issue)
+    return res.status(500).json({ error: err.message });
+  }
+}
+
+// SEARCH PRODUCT - GET /api/products/search/:key/:value
+
+export async function searchProduct(req, res) {
+  try {
+    const { key, value } = req.params;
+
+    // Validate the search key
+    const validKeys = ["name", "category", "price", "quantity"];
+    if (!validKeys.includes(key)) {
+      return res.status(400).json({
+        error: `Invalid search key. Use one of: ${validKeys.join(", ")}`,
+      });
+    }
+
+    // Convert string route param to a number if the field is numeric
+    let searchValue = value;
+    if (["price", "quantity"].includes(key)) {
+      const num = Number(value);
+      if (Number.isNaN(num)) {
+        return res.status(400).json({ error: `${key} must be a number` });
+      }
+      searchValue = num;
+    }
+
+    // 1) Fetch data
+    let items = await Product.find({}).lean();
+
+    // 2) Sort ASC by the same key to satisfy Binary Search precondition
+    items = quickSort(items, key, "asc");
+
+    // 3) Run Binary Search (exact match)
+    const found = binarySearch(items, key, searchValue);
+
+    if (!found) {
+      // Not an error — just means no product matched the exact value
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Success — return the found object
+    return res.status(200).json(found);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+}
 
 //READ ALL - GET /api/products
 export async function getProducts(req, res) {
@@ -13,7 +92,7 @@ export async function getProducts(req, res) {
     const items = await Product.find({}).lean();
 
     //2. Send the array back. If DB is empty, you'll see []
-    res.json(items);
+    return res.status(200).json(items);
   } catch (err) {
     // 3. If something goes wrong, return a 500 with the error message.
     res.status(500).json({ error: err.message });
@@ -83,7 +162,7 @@ export async function getProductById(req, res) {
     }
 
     //4. Found it - return it
-    return res.json(item);
+    return res.status(200).json(item);
   } catch (err) {
     //5. if the id string is invalid (bad length, etc.), mongoose throws a cast error
     //answer with 400 so clients know the id itself is malformed
@@ -150,7 +229,9 @@ export async function updateProduct(req, res) {
     }
 
     //6. finally success , send the updated product
-    return res.json(updated);
+    return res
+      .status(200)
+      .json({ message: "Product updated", product: updated });
   } catch (err) {
     //7. if id shape is invalid (not a proper ObjectId), mongoose throws a 404
     return res.status(400).json({ error: "invalid product ID" });
@@ -172,7 +253,9 @@ export async function deleteProduct(req, res) {
     }
 
     //4. success: return a tiny confirmation payload
-    return res.json({ message: "Product deleted", id: deleted._id });
+    return res
+      .status(200)
+      .json({ message: "Product deleted", id: deleted._id });
   } catch (err) {
     //5. invalid objectId mongoose throws a respond 400
     return res.status(400).json({ error: "Invalid product ID" });

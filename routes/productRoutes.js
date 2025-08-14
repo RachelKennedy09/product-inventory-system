@@ -10,6 +10,8 @@ import {
   getProductById,
   updateProduct,
   deleteProduct,
+  sortProducts,
+  searchProduct,
 } from "../controllers/productController.js";
 
 const router = Router();
@@ -19,6 +21,10 @@ router.get("/", getProducts); //GET /api/products
 
 // CREATE - send a post request to /api/products with JSON body
 router.post("/", createProduct); //POST /api/product
+
+// ALGORITHMS - quickSort and binarySearch
+router.get("/sort/:key", sortProducts);
+router.get("/search/:key/:value", searchProduct);
 
 // GET BY  ID
 router.get("/:id", getProductById); //GET /api/product/:id
