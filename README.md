@@ -5,42 +5,38 @@ A small REST API to manage products, plus an Algorithms Sprint demonstrating **Q
 ## Table of Contents
 - [Product Inventory System (Node.js + Express + MongoDB)](#product-inventory-system-nodejs--express--mongodb)
   - [Table of Contents](#table-of-contents)
-  - [Tech Stack](#tech-stack)
-  - [Setup](#setup)
   - [Run](#run)
+- [Server: http://localhost:3000](#server-httplocalhost3000)
+- [Health: GET /health -\> { "ok": true, "uptime": ... }](#health-get-health----ok-true-uptime--)
   - [API](#api)
     - [Example requests](#example-requests)
+- [Create](#create)
+- [Sort by price (desc)](#sort-by-price-desc)
+- [Binary search exact name (URL-encoded)](#binary-search-exact-name-url-encoded)
   - [Algorithms (Sprint 3)](#algorithms-sprint-3)
   - [Testing](#testing)
   - [Design Notes \& Tradeoffs](#design-notes--tradeoffs)
   - [Future Improvements](#future-improvements)
-  - [📝 Wins and Challenges](#-wins-and-challenges)
+  - [Wins and Challenges](#wins-and-challenges)
     - [Wins](#wins)
     - [Challenges](#challenges)
-
-## Tech Stack
-- **Node.js** + **Express** for HTTP API  
-- **MongoDB** + **Mongoose** for data  
-- **Mocha + Chai** (+ Supertest) for tests
-
-## Setup
 1. Clone repo and install:
-   ```bash
+   
    npm install
-   ```
+   
 2. Create `.env` from `.env.example` and set:
-   ```
+   
    MONGODB_URI=mongodb://127.0.0.1:27017/product_inventory
    PORT=3000
-   ```
+   
 3. Ensure MongoDB is running locally (or use Atlas and update `MONGODB_URI`).
 
 ## Run
-```bash
+
 npm run dev
 # Server: http://localhost:3000
 # Health: GET /health -> { "ok": true, "uptime": ... }
-```
+
 
 ## API
 Base path: `/api/products`
@@ -59,7 +55,7 @@ Base path: `/api/products`
 **Note:** Binary Search sorts the in-memory array **ASC by that key** first, then searches.
 
 ### Example requests
-```bash
+
 # Create
 curl -X POST http://localhost:3000/api/products   -H "Content-Type: application/json"   -d '{"name":"Banana Bunch (6)","category":"produce","price":2.49,"quantity":120}'
 
@@ -68,7 +64,7 @@ curl http://localhost:3000/api/products/sort/price?order=desc
 
 # Binary search exact name (URL-encoded)
 curl "http://localhost:3000/api/products/search/name/banana%20bunch%20(6)"
-```
+
 
 ## Algorithms (Sprint 3)
 - **QuickSort**: custom, non-mutating, compares numbers arithmetically and strings case-insensitively.  
@@ -82,9 +78,9 @@ curl "http://localhost:3000/api/products/search/name/banana%20bunch%20(6)"
 
 ## Testing
 - Unit tests (algorithms):
-  ```bash
+  
   npm test
-  ```
+  
   - Files: `test/quicksort.test.js`, `test/binarySearch.test.js`
 - (Optional) Integration tests with `supertest` can be added to hit routes.
 
@@ -101,7 +97,7 @@ curl "http://localhost:3000/api/products/search/name/banana%20bunch%20(6)"
 - E2E tests (supertest) and code coverage.
 - Pagination on `/api/products` for large datasets.
 
-## 📝 Wins and Challenges
+## Wins and Challenges
 
 ### Wins
 - Practiced **Morgan logger** instead of a custom console logger for learning purposes.
@@ -112,7 +108,9 @@ curl "http://localhost:3000/api/products/search/name/banana%20bunch%20(6)"
   - Also displays **404** and **200** status codes in the terminal due to Morgan logging.
 - In controllers, used `.lean()` so Mongoose returns **plain JavaScript objects** instead of full Mongoose documents. This is faster and ideal.
 - Used **basic HTTP status codes** (e.g., `200`, `404`) instead of string descriptions for better performance, easier reading, and fewer errors.
-- Learned how to do a /seed for bulk inputting data on thunder client for faster testing
+- Learned how to do a **/seed** for bulk inputting data on thunder client for faster testing
+- Stuck with Trello for student organization skills 
+ [My trello workspace](https://trello.com/invite/b/68978276d4761946e452e6c0/ATTI89546435f6d85c5e45bd72a03c81e1abA2AAE497/product-inventory-system)
 
 ### Challenges
 - Setting up bulk product insertion for testing required careful JSON formatting.

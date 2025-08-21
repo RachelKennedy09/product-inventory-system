@@ -5,7 +5,7 @@
 import "dotenv/config"; //Loads .env so process.env has MONGODB_URI, PORT
 import express from "express"; //Web framework
 import morgan from "morgan"; //Request logger to see incoming calls
-import { dbState } from "./db.js"; // DB connection function
+import { connectDB, dbState } from "./db.js"; // DB connection function
 import productRoutes from "./routes/productRoutes.js"; // import routes
 
 // call the app
