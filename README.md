@@ -14,7 +14,7 @@ A small REST API to manage products, plus an Algorithms Sprint demonstrating **Q
 - [Create](#create)
 - [Sort by price (desc)](#sort-by-price-desc)
 - [Binary search exact name (URL-encoded)](#binary-search-exact-name-url-encoded)
-  - [Algorithms (Sprint 3)](#algorithms-sprint-3)
+  - [Algorithms](#algorithms)
   - [Testing](#testing)
   - [Design Notes \& Tradeoffs](#design-notes--tradeoffs)
   - [Future Improvements](#future-improvements)
@@ -74,15 +74,31 @@ curl -s http://localhost:3000/api/products/sort/price?order=desc
 curl -s "http://localhost:3000/api/products/search/name/banana%20bunch%20(6)"
 
 
-## Algorithms (Sprint 3)
+## Algorithms 
 Both algorithms are also exposed via routes, so you can test them without looking at the code.
 
-- **QuickSort**: custom, non-mutating, compares numbers arithmetically and strings case-insensitively.  
+- **QuickSort Pseudocode **: custom, non-mutating, compares numbers arithmetically and strings case-insensitively.  
+  1. Choose a pivot (middle element).
+  2. Partition array into < pivot and >= pivot.
+  3. Recursively sort partitions.
+  4. Concatenate results (left + pivot + right).
+  
   - Average time: **O(n log n)**, Worst: **O(n²)** (rare, bad pivot cases).  
   - File: `utils/quicksort.js`
-- **Binary Search**: exact-match search on a list **sorted by the same key (ASC)**.  
+  
+- **Binary Search Pseudocode**: exact-match search on a list **sorted by the same key (ASC)**.  
+  1. Sort array ASC by key
+  2. Set low=0, high=arr.length-1
+  3. While low <= high:
+   - mid = (low+high)/2
+   - if arr[mid] == target → return index.
+   - if arr[mid] < target → search right.
+   - else → search left.
+  4. If not found, return -1.
+
   - Time: **O(log n)**  
   - File: `utils/binarySearch.js`
+  
 - **Comparator**: shared helper handling strings vs numbers, case-insensitive for strings.  
   - File: `utils/compareByKey.js`
 
