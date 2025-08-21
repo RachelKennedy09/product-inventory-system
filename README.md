@@ -5,6 +5,7 @@ A small REST API to manage products, plus an Algorithms Sprint demonstrating **Q
 ## Table of Contents
 - [Product Inventory System (Node.js + Express + MongoDB)](#product-inventory-system-nodejs--express--mongodb)
   - [Table of Contents](#table-of-contents)
+  - [Quick Start](#quick-start)
   - [Run](#run)
 - [Server: http://localhost:3000](#server-httplocalhost3000)
 - [Health: GET /health -\> { "ok": true, "uptime": ... }](#health-get-health----ok-true-uptime--)
@@ -20,8 +21,13 @@ A small REST API to manage products, plus an Algorithms Sprint demonstrating **Q
   - [Wins and Challenges](#wins-and-challenges)
     - [Wins](#wins)
     - [Challenges](#challenges)
-1. Clone repo and install:
+
+## Quick Start
+
+1. Clone repo and install dependencies:
    
+   git close <repo-url>
+   cd product-inventory-system
    npm install
    
 2. Create `.env` from `.env.example` and set:
@@ -34,6 +40,8 @@ A small REST API to manage products, plus an Algorithms Sprint demonstrating **Q
 ## Run
 
 npm run dev
+
+
 # Server: http://localhost:3000
 # Health: GET /health -> { "ok": true, "uptime": ... }
 
@@ -60,13 +68,15 @@ Base path: `/api/products`
 curl -X POST http://localhost:3000/api/products   -H "Content-Type: application/json"   -d '{"name":"Banana Bunch (6)","category":"produce","price":2.49,"quantity":120}'
 
 # Sort by price (desc)
-curl http://localhost:3000/api/products/sort/price?order=desc
+curl -s http://localhost:3000/api/products/sort/price?order=desc
 
 # Binary search exact name (URL-encoded)
-curl "http://localhost:3000/api/products/search/name/banana%20bunch%20(6)"
+curl -s "http://localhost:3000/api/products/search/name/banana%20bunch%20(6)"
 
 
 ## Algorithms (Sprint 3)
+Both algorithms are also exposed via routes, so you can test them without looking at the code.
+
 - **QuickSort**: custom, non-mutating, compares numbers arithmetically and strings case-insensitively.  
   - Average time: **O(n log n)**, Worst: **O(n²)** (rare, bad pivot cases).  
   - File: `utils/quicksort.js`
@@ -101,7 +111,7 @@ curl "http://localhost:3000/api/products/search/name/banana%20bunch%20(6)"
 
 ### Wins
 - Practiced **Morgan logger** instead of a custom console logger for learning purposes.
-- Created a **separate database connection file** (`database.js`) to keep MongoDB connection logic isolated and improve error handling (e.g., calling `process.exit(1)` if the connection fails).
+- Created a **separate database connection file** (`db.js`) to keep MongoDB connection logic isolated and improve error handling (e.g., calling `process.exit(1)` if the connection fails).
 - Added a **Health Route** to quickly verify the API is running.
   - **How to use:** Once connected to the database, run `npm start` (or `node server.js`) in your terminal, then visit [http://localhost:3000/health](http://localhost:3000/health).
   - Returns: `{ ok: true, uptime: <seconds> }`, showing the server is up.
