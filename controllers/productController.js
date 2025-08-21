@@ -1,5 +1,31 @@
-// This file holds the code that runs when a route is hit
-// Our route will call getProducts which returns an array of products
+/**
+ * productControllers.js
+ *
+ * Purpose:
+ *   Contains all controller functions for the Product Inventory System API.
+ *   Each function is called when a route in productRoutes.js is hit.
+ *   Controllers handle input validation, interact with the Product model (MongoDB),
+ *   and return JSON responses with appropriate HTTP status codes.
+ *
+ * Routes & Controllers:
+ *   - GET    /api/products              → getProducts()      → Return all products
+ *   - GET    /api/products/:id          → getProductById()   → Return single product by _id
+ *   - POST   /api/products              → createProduct()    → Create a new product
+ *   - PUT    /api/products/:id          → updateProduct()    → Update price/quantity/category
+ *   - DELETE /api/products/:id          → deleteProduct()    → Delete product by _id
+ *   - GET    /api/products/sort/:key    → sortProducts()     → Sort products using QuickSort
+ *   - GET    /api/products/search/:key/:value
+ *                                        → searchProduct()   → Binary Search for exact match
+ *
+ * Algorithms:
+ *   - sortProducts() uses a custom, non-mutating QuickSort (O(n log n) average).
+ *   - searchProduct() sorts ASC, then runs Binary Search (O(log n)).
+ *
+ * Error Handling:
+ *   - Input validation for types, required fields, and valid sort/search keys.
+ *   - Returns 400 (Bad Request) for invalid input, 404 (Not Found) for missing products,
+ *     500 (Server Error) for unexpected DB/server failures.
+ */
 
 //Imports
 

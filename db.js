@@ -1,4 +1,34 @@
-// db.js
+/**
+ * db.js
+ *
+ * Purpose:
+ *   Centralizes MongoDB connection logic for the Product Inventory System API.
+ *   Provides helper functions to connect, disconnect, and check the current DB state.
+ *   Keeps database code separated from application logic for cleaner organization.
+ *
+ * Exports:
+ *   - connectDB(uri):
+ *       Connects to MongoDB using the provided URI.
+ *       Logs connection events and exits the process on failure.
+ *
+ *   - disconnectDB():
+ *       Gracefully closes the MongoDB connection (used in tests or shutdown).
+ *
+ *   - dbState():
+ *       Returns a human-readable string of the current connection state:
+ *       "disconnected" | "connected" | "connecting" | "disconnecting".
+ *
+ * Features:
+ *   - Sets mongoose strictQuery mode for safer queries.
+ *   - Logs status changes (connected, disconnected, reconnected).
+ *   - Validates that a MONGODB_URI is provided, otherwise stops the server.
+ *
+ * Example Usage:
+ *   import { connectDB, dbState, disconnectDB } from "./db.js";
+ *   await connectDB(process.env.MONGODB_URI);
+ *   console.log("DB status:", dbState());
+ */
+
 import mongoose from "mongoose";
 
 const readyMap = {

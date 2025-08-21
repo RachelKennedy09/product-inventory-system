@@ -1,8 +1,28 @@
-// File is for the endpoint path and which controller function handles it.
-// Use under /api/products in server.js
+/**
+ * productRoutes.js
+ *
+ * Purpose:
+ *   Defines all REST API routes for products and maps them to controller functions.
+ *   These routes are mounted under the base path `/api/products` in server.js.
+ *
+ * Routes:
+ *   - GET    /api/products              → getProducts()      → Return all products
+ *   - POST   /api/products              → createProduct()    → Create a new product
+ *
+ *   - GET    /api/products/sort/:key    → sortProducts()     → Sort products using QuickSort
+ *   - GET    /api/products/search/:key/:value
+ *                                        → searchProduct()   → Binary Search for exact match
+ *
+ *   - GET    /api/products/:id          → getProductById()   → Return a product by MongoDB _id
+ *   - PUT    /api/products/:id          → updateProduct()    → Update price, quantity, or category
+ *   - DELETE /api/products/:id          → deleteProduct()    → Delete a product by MongoDB _id
+ *
+ * Notes:
+ *   - Routes delegate logic to controller functions in productController.js.
+ *   - Algorithms (QuickSort & Binary Search) are exposed as API endpoints for Sprint 3 demonstration.
+ */
 
 // Map HTTP endpoints to controller functions.
-
 import { Router } from "express";
 import {
   getProducts,

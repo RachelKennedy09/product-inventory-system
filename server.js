@@ -1,5 +1,32 @@
-// This file will boot the app. Load env, create Express app, add JSON parsing, connect to DB,
-// then start listening. Includes a health route for a quick check.
+/**
+ * server.js
+ *
+ * Purpose:
+ *   Entry point of the Product Inventory System API.
+ *   - Loads environment variables from .env.
+ *   - Creates and configures the Express application.
+ *   - Applies global middleware (JSON body parser, request logging).
+ *   - Defines a /health route for quick server + DB status checks.
+ *   - Mounts product routes under /api/products.
+ *   - Connects to MongoDB before starting the server to ensure DB availability.
+ *
+ * Features:
+ *   - Health route returns { ok, uptime, db } where db = connection state.
+ *   - Uses Morgan middleware to log HTTP method, path, and status in terminal.
+ *   - Reads PORT from environment variables, defaults to 3000.
+ *
+ * Startup Flow:
+ *   1. Load env variables.
+ *   2. Initialize Express app with middleware.
+ *   3. Register /health route.
+ *   4. Mount productRoutes under /api/products.
+ *   5. Connect to MongoDB (via connectDB).
+ *   6. Start server listening on PORT once DB is connected.
+ *
+ * Example:
+ *   npm run dev
+ *   → Visit http://localhost:3000/health to verify status.
+ */
 
 //Imports
 import "dotenv/config"; //Loads .env so process.env has MONGODB_URI, PORT

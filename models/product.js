@@ -1,5 +1,29 @@
-// File defines the schema or a Product and exports a Model so the rest of the app can read/write products
-// Other files will import { Product } from "../models/Product.js" and then call Product.find(), Product.create() etc..
+/**
+ * Product.js
+ *
+ * Purpose:
+ *   Defines the Mongoose schema and model for "Product" documents in MongoDB.
+ *   A Product represents an item in the inventory with fields for name, category, price, and quantity.
+ *   Other files can import { Product } and use it to query or update the database
+ *   (e.g., Product.find(), Product.create(), Product.findByIdAndUpdate()).
+ *
+ * Schema Fields:
+ *   - name:     String, required, trimmed
+ *   - category: String, required, stored lowercase, trimmed (for case-insensitive filtering)
+ *   - price:    Number, required, minimum 0 (no negative prices)
+ *   - quantity: Number, required, minimum 0, default 0 (stock count)
+ *
+ * Schema Options:
+ *   - timestamps: true → automatically adds createdAt and updatedAt fields
+ *
+ * Exports:
+ *   - Product (Mongoose model) → provides all MongoDB CRUD methods.
+ *
+ * Example Usage:
+ *   import { Product } from "../models/Product.js";
+ *   const items = await Product.find({});
+ *   const created = await Product.create({ name: "Banana", category: "produce", price: 1.99, quantity: 100 });
+ */
 
 //Imports
 import mongoose from "mongoose";
